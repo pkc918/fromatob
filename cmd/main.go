@@ -92,7 +92,9 @@ func PostAllFolder(toPath string) filepath.WalkFunc {
 		}
 		if info.IsDir() {
 			relativePath, _ := filepath.Rel(toPath, path)
-			isTargetFolder := strings.Contains(relativePath, "/")
+			isTargetFolder := strings.Contains(relativePath, "\\")
+			fmt.Println("folder: ", relativePath, isTargetFolder)
+
 			if isTargetFolder {
 				FolderList = append(FolderList, path)
 			}
@@ -135,12 +137,17 @@ func FromA2B() {
 }
 
 func CopyFile(source, destination string) error {
+	fmt.Println("folder: ", destination)
+	fmt.Println("file: ", source)
+	s := fmt.Sprintf("%s", source)
+	d := fmt.Sprintf("%s", destination)
+
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
 	case "windows":
-		cmd = exec.Command("cmd", "/C", "copy", source, destination)
+		cmd = exec.Command("cmd", "/C", "copy", s, d)
 	case "darwin", "linux":
-		cmd = exec.Command("cp", source, destination)
+		cmd = exec.Command("cp", s, d)
 	default:
 		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
 	}
